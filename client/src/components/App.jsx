@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import MovieList from './MovieList.jsx'
 import AddMovie from './AddMovie.jsx'
 import SearchBar from './SearchBar.jsx'
@@ -32,6 +33,27 @@ class App extends React.Component {
     this.switchTabToWatch = this.switchTabToWatch.bind(this);
   }
 
+  fetch() {
+    fetch('http://localhost:3000/movies')
+    .then(response => response.json())
+    .then(data => {
+      for (let i in data) {
+        if (data[i].watched === 1) {
+          data[i].watched = true;
+        } else {
+          data[i].watched = false;
+        }
+      }
+      this.setState({
+        movies: data
+      })
+    });
+  }
+
+  componentDidMount() {
+    this.fetch();
+  }
+
   switchTabWatched() {
     this.setState({
       watchTab: true
@@ -51,7 +73,11 @@ class App extends React.Component {
   }
 
   searchResults() {
-    let filtered = this.state.movies.filter(movie => movie.title.includes(this.state.search));
+    let filtered = this.state.movies.filter(movie => {
+      return movie.title.includes(this.state.search);
+    });
+
+    console.log(filtered);
 
     if(filtered.length < 1) {
       filtered = [{title: 'none found', watched: 'true', nonefound: true}, {title: 'none found', watched: 'false', nonefound: true}]
@@ -72,21 +98,32 @@ class App extends React.Component {
     if(this.state.addMovie === '') {
       return
     }
-    this.setState({
-      movies: this.state.movies.concat([{title: this.state.addMovie, watched: false}]),
-      searchResults: []
-    })
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({title: this.state.addMovie, watched: 0})
+    };
+
+    fetch('http://localhost:3000/movies', requestOptions)
+    .then (response => this.fetch());
   }
 
   toggleWatch(movie) {
-    let updatedMovies = this.state.movies;
-    for(let i = 0; i < updatedMovies.length; i++) {
-      if (updatedMovies[i].title === movie.title) {
-        updatedMovies[i].watched = !updatedMovies[i].watched;
-        console.log(updatedMovies);
-        this.setState({movies: updatedMovies});
-      }
+    let watched;
+    if (movie.watched === true) {
+      watched = 0;
+    } else {
+      watched = 1;
     }
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: movie.id, watched: watched})
+    };
+
+    fetch('http://localhost:3000/movies', requestOptions)
+    .then (response => this.fetch());
   }
 
   render(){

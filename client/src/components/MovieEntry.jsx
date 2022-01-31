@@ -30,7 +30,7 @@ class MovieEntry extends React.Component {
           <>
             <div>{this.props.movie.title}</div>
             <button onClick={() => this.props.toggleWatch(this.props.movie)}>{this.props.movie.watched ? 'Watched' : 'To Watch'}</button>
-            <button onClick={() => this.showInfo()}>chungus</button>
+            <button onClick={() => this.showInfo()}>^</button>
             <div>chungus chungus chungus</div>
           </>
         )
@@ -47,7 +47,7 @@ class MovieEntry extends React.Component {
           <>
             <div>{this.props.movie.title}</div>
             <button onClick={() => this.props.toggleWatch(this.props.movie)}>{this.props.movie.watched ? 'Watched' : 'To Watch'}</button>
-            <button onClick={() => this.showInfo()}>chungus</button>
+            <button onClick={() => this.showInfo()}>details</button>
           </>
         )
       }
