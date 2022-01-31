@@ -77,8 +77,6 @@ class App extends React.Component {
       return movie.title.includes(this.state.search);
     });
 
-    console.log(filtered);
-
     if(filtered.length < 1) {
       filtered = [{title: 'none found', watched: 'true', nonefound: true}, {title: 'none found', watched: 'false', nonefound: true}]
     }
